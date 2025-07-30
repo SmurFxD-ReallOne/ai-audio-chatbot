@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Audio Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .recording-dot {
+            width: 12px;
+            height: 12px;
+            background: #dc3545;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .conversation {
+            margin-top: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            margin-left: 20%;
+        }
+
+        .message.bot {
+            background: white;
+            color: #333;
+            margin-right: 20%;
+            border: 1px solid #e1e5e9;
+        }
+
+        .message-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .message-content {
+            line-height: 1.5;
+        }
+
+        .audio-player {
+            margin-top: 10px;
+        }
+
+        .audio-player audio {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .audio-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 AI Audio Chatbot</h1>
+            <p>Speak or type to chat with AI - Get responses in both text and audio!</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="textInput">Or type your message:</label>
+                <textarea id="textInput" class="text-input" placeholder="Type your message here..." rows="3"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Audio Input:</label>
+                <div class="audio-controls">
+                    <button id="startRecording" class="btn btn-primary">
+                        🎤 Start Recording
+                    </button>
+                    <button id="stopRecording" class="btn btn-danger" style="display: none;">
+                        ⏹️ Stop Recording
+                    </button>
+                    <button id="sendText" class="btn btn-primary">
+                        📤 Send Text
+                    </button>
+                    <div id="recordingIndicator" class="recording-indicator">
+                        <div class="recording-dot"></div>
+                        Recording...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing your message...</p>
+        </div>
+
+        <div class="conversation" id="conversation">
+            <div class="message bot">
+                <div class="message-header">🤖 AI Assistant</div>
+                <div class="message-content">
+                    Hello! I'm your AI assistant. You can speak to me by clicking the microphone button, or type your message and click "Send Text". I'll respond with both text and audio!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AudioChatbot {
+            constructor() {
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                this.isRecording = false;
+                this.audioContext = null;
+                this.recognition = null;
+                this.useBrowserSpeech = false;
+                
+                this.initializeElements();
+                this.initializeEventListeners();
+                this.initializeAudio();
+                this.initializeSpeechRecognition();
+            }
+
+            initializeElements() {
+                this.startRecordingBtn = document.getElementById('startRecording');
+                this.stopRecordingBtn = document.getElementById('stopRecording');
+                this.sendTextBtn = document.getElementById('sendText');
+                this.textInput = document.getElementById('textInput');
+                this.conversation = document.getElementById('conversation');
+                this.status = document.getElementById('status');
+                this.loading = document.getElementById('loading');
+                this.recordingIndicator = document.getElementById('recordingIndicator');
+            }
+
+            initializeEventListeners() {
+                this.startRecordingBtn.addEventListener('click', () => this.startRecording());
+                this.stopRecordingBtn.addEventListener('click', () => this.stopRecording());
+                this.sendTextBtn.addEventListener('click', () => this.sendTextMessage());
+                this.textInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendTextMessage();
+                    }
+                });
+            }
+
+            initializeSpeechRecognition() {
+                // Check if browser supports speech recognition
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    this.recognition.continuous = false;
+                    this.recognition.interimResults = false;
+                    this.recognition.lang = 'en-US';
+                    
+                    this.recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript;
+                        this.processBrowserSpeechResult(transcript);
+                    };
+                    
+                    this.recognition.onerror = (event) => {
+                        console.error('Speech recognition error:', event.error);
+                        this.showStatus('Speech recognition error: ' + event.error, 'error');
+                    };
+                    
+                    this.recognition.onend = () => {
+                        this.stopRecording();
+                    };
+                    
+                    this.useBrowserSpeech = true;
+                    console.log('Browser speech recognition initialized');
+                } else {
+                    console.log('Browser speech recognition not supported, using audio recording');
+                }
+            }
+
+            async initializeAudio() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            sampleRate: 16000,
+                            channelCount: 1,
+                            echoCancellation: true,
+                            noiseSuppression: true
+                        } 
+                    });
+                    
+                    // Use WebM format for better browser compatibility
+                    const options = { mimeType: 'audio/webm;codecs=opus' };
+                    this.mediaRecorder = new MediaRecorder(stream, options);
+                    
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        this.audioChunks.push(event.data);
+                    };
+
+                    this.mediaRecorder.onstop = () => {
+                        this.processAudioRecording();
+                    };
+                } catch (error) {
+                    // Fallback to default format if the preferred one isn't supported
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        this.mediaRecorder = new MediaRecorder(stream);
+                        
+                        this.mediaRecorder.ondataavailable = (event) => {
+                            this.audioChunks.push(event.data);
+                        };
+
+                        this.mediaRecorder.onstop = () => {
+                            this.processAudioRecording();
+                        };
+                    } catch (fallbackError) {
+                        this.showStatus('Error accessing microphone: ' + fallbackError.message, 'error');
+                    }
+                }
+            }
+
+            startRecording() {
+                if (this.useBrowserSpeech && this.recognition) {
+                    // Use browser speech recognition
+                    this.recognition.start();
+                    this.isRecording = true;
+                    
+                    this.startRecordingBtn.style.display = 'none';
+                    this.stopRecordingBtn.style.display = 'inline-flex';
+                    this.recordingIndicator.style.display = 'flex';
+                    
+                    this.showStatus('Listening... Speak now!', 'info');
+                } else if (this.mediaRecorder) {
+                    // Use audio recording
+                    this.audioChunks = [];
+                    this.mediaRecorder.start();
+                    this.isRecording = true;
+                    
+                    this.startRecordingBtn.style.display = 'none';
+                    this.stopRecordingBtn.style.display = 'inline-flex';
+                    this.recordingIndicator.style.display = 'flex';
+                    
+                    this.showStatus('Recording started...', 'info');
+                } else {
+                    this.showStatus('Microphone not available', 'error');
+                }
+            }
+
+            stopRecording() {
+                if (this.recognition && this.isRecording) {
+                    this.recognition.stop();
+                } else if (this.mediaRecorder && this.isRecording) {
+                    this.mediaRecorder.stop();
+                }
+                
+                this.isRecording = false;
+                this.startRecordingBtn.style.display = 'inline-flex';
+                this.stopRecordingBtn.style.display = 'none';
+                this.recordingIndicator.style.display = 'none';
+            }
+
+            processBrowserSpeechResult(transcript) {
+                this.showStatus('Processing speech...', 'info');
+                this.processMessage(transcript, 'text');
+            }
+
+            async processAudioRecording() {
+                // Create audio blob with proper format
+                const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                const reader = new FileReader();
+                
+                reader.onload = async () => {
+                    const audioData = reader.result;
+                    await this.sendAudioMessage(audioData);
+                };
+                
+                reader.readAsDataURL(audioBlob);
+            }
+
+            async sendTextMessage() {
+                const text = this.textInput.value.trim();
+                if (!text) {
+                    this.showStatus('Please enter a message', 'error');
+                    return;
+                }
+
+                await this.processMessage(text, 'text');
+                this.textInput.value = '';
+            }
+
+            async sendAudioMessage(audioData) {
+                await this.processMessage(audioData, 'audio');
+            }
+
+            async processMessage(content, type) {
+                this.showLoading(true);
+                this.hideStatus();
+
+                try {
+                    const endpoint = type === 'audio' ? '/process_audio' : '/process_text';
+                    const data = type === 'audio' ? { audio: content } : { text: content };
+
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        this.addMessage('user', type === 'audio' ? result.user_text : content);
+                        this.addMessage('bot', result.response_text, result.response_audio);
+                        this.showStatus('Message processed successfully!', 'success');
+                    } else {
+                        const errorMsg = result.error || 'Error processing message';
+                        this.showStatus(errorMsg, 'error');
+                        console.error('Server error:', result);
+                    }
+                } catch (error) {
+                    this.showStatus('Network error: ' + error.message, 'error');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            addMessage(sender, content, audioData = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const header = document.createElement('div');
+                header.className = 'message-header';
+                header.textContent = sender === 'user' ? '👤 You' : '🤖 AI Assistant';
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = content;
+                
+                messageDiv.appendChild(header);
+                messageDiv.appendChild(contentDiv);
+                
+                if (audioData && sender === 'bot') {
+                    const audioPlayer = document.createElement('div');
+                    audioPlayer.className = 'audio-player';
+                    
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = audioData;
+                    
+                    audioPlayer.appendChild(audio);
+                    messageDiv.appendChild(audioPlayer);
+                }
+                
+                this.conversation.appendChild(messageDiv);
+                this.conversation.scrollTop = this.conversation.scrollHeight;
+            }
+
+            showStatus(message, type) {
+                this.status.textContent = message;
+                this.status.className = `status ${type}`;
+                this.status.style.display = 'block';
+                
+                setTimeout(() => {
+                    this.hideStatus();
+                }, 5000);
+            }
+
+            hideStatus() {
+                this.status.style.display = 'none';
+            }
+
+            showLoading(show) {
+                this.loading.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        // Initialize the chatbot when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AudioChatbot();
+        });
+    </script>
+</body>
+</html> 
