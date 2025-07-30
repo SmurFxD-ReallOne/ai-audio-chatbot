@@ -1,4 +1,4 @@
-# AI Audio Chatbot
+# Audio Chatbot
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-2.3.3-green.svg)](https://flask.palletsprojects.com/)
@@ -6,19 +6,19 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Complete-success.svg)]()
 
-A complete **audio-to-text-to-audio chatbot** system that allows users to interact with an AI assistant using voice or text input, with responses provided in both text and audio formats.
+A complete **audio-to-text-to-audio chatbot** system that allows users to interact with an intelligent assistant using voice or text input, with responses provided in both text and audio formats.
 
 ## Screenshots
 
 ![AI Audio Chatbot Demo](demo.gif)
 
-*Demo showing voice interaction with the AI assistant*
+*Demo showing voice interaction with the assistant*
 
 ## Features
 
 - **Voice Input**: Record audio and convert to text using browser speech recognition
-- **AI Responses**: Generate intelligent responses using Cohere's LLM
-- **Audio Output**: Convert AI responses to speech using Google Text-to-Speech
+- **Intelligent Responses**: Generate smart responses using Cohere's LLM
+- **Audio Output**: Convert responses to speech using Google Text-to-Speech
 - **Text Input**: Alternative text-based interaction
 - **Responsive Design**: Modern, mobile-friendly interface
 - **Real-time Processing**: Live speech recognition and processing
@@ -62,7 +62,7 @@ A complete **audio-to-text-to-audio chatbot** system that allows users to intera
 
 6. **To stop the server**: Press `Ctrl+C` in the terminal
 
-**Note**: The chatbot only works while the server is running. When you stop the server, the web interface will not be able to connect to the AI backend.
+**Note**: The chatbot only works while the server is running. When you stop the server, the web interface will not be able to connect to the backend.
 
 ## How to Use
 
@@ -70,12 +70,12 @@ A complete **audio-to-text-to-audio chatbot** system that allows users to intera
 1. Click the **"Start Recording"** button
 2. Speak your message clearly
 3. The browser will automatically convert your speech to text
-4. Receive AI response in both text and audio formats
+4. Receive response in both text and audio formats
 
 ### Text Interaction
 1. Type your message in the text area
 2. Click **"Send Text"** or press Enter
-3. Receive AI response in both text and audio formats
+3. Receive response in both text and audio formats
 
 ## Technical Architecture
 
@@ -113,7 +113,7 @@ A complete **audio-to-text-to-audio chatbot** system that allows users to intera
 
 ## Customization
 
-### Changing the AI Model
+### Changing the Model
 Edit the `LLMProcessor` class in `app.py`:
 ```python
 response = self.client.generate(
@@ -187,7 +187,7 @@ If you encounter any issues or have questions:
 
 This project successfully implements:
 - Audio input to text conversion
-- LLM-powered AI responses using Cohere
+- LLM-powered responses using Cohere
 - Text-to-speech audio output
 - Modern web interface
 - Cross-browser compatibility
@@ -198,4 +198,4 @@ This project successfully implements:
 
 ---
 
-**Enjoy chatting with your AI assistant!** 
+**Enjoy chatting with your assistant!** 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup script for AI Audio Chatbot
+Setup script for Audio Chatbot
 This script helps you set up your Cohere API key
 """
 
@@ -15,11 +15,11 @@ def create_env_file():
     try:
         with open('.env', 'w') as f:
             f.write(env_content)
-        print("✅ .env file created successfully!")
-        print(f"📝 API Key configured: {api_key[:10]}...{api_key[-10:]}")
+        print("✓ .env file created successfully!")
+        print(f"API Key configured: {api_key[:10]}...{api_key[-10:]}")
         return True
     except Exception as e:
-        print(f"❌ Error creating .env file: {e}")
+        print(f"✗ Error creating .env file: {e}")
         return False
 
 def check_dependencies():
@@ -38,41 +38,41 @@ def check_dependencies():
             missing_packages.append(package)
     
     if missing_packages:
-        print("❌ Missing packages:")
+        print("✗ Missing packages:")
         for package in missing_packages:
             print(f"   - {package}")
-        print("\n📦 Install missing packages with:")
+        print("\nInstall missing packages with:")
         print("   pip install -r requirements.txt")
         return False
     else:
-        print("✅ All required packages are installed!")
+        print("✓ All required packages are installed!")
         return True
 
 def main():
-    print("🎤 AI Audio Chatbot Setup")
+    print("Audio Chatbot Setup")
     print("=" * 40)
     
     # Create .env file
     print("\n1. Setting up API key...")
     if create_env_file():
-        print("   ✅ API key configured successfully!")
+        print("   ✓ API key configured successfully!")
     else:
-        print("   ❌ Failed to configure API key")
+        print("   ✗ Failed to configure API key")
         return
     
     # Check dependencies
     print("\n2. Checking dependencies...")
     if check_dependencies():
-        print("   ✅ All dependencies are ready!")
+        print("   ✓ All dependencies are ready!")
     else:
-        print("   ⚠️  Some dependencies are missing")
-        print("   💡 Run: pip install -r requirements.txt")
+        print("   Warning: Some dependencies are missing")
+        print("   Run: pip install -r requirements.txt")
     
     print("\n" + "=" * 40)
-    print("🚀 Setup complete! You can now run the chatbot:")
+    print("Setup complete! You can now run the chatbot:")
     print("   python app.py")
     print("   or double-click run.bat (Windows)")
-    print("\n🌐 Open your browser to: http://localhost:5000")
+    print("\nOpen your browser to: http://localhost:5000")
 
 if __name__ == "__main__":
     main() 

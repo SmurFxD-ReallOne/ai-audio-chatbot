@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Audio Chatbot</title>
+    <title>Audio Chatbot</title>
     <style>
         * {
             margin: 0;
@@ -280,8 +280,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎤 AI Audio Chatbot</h1>
-            <p>Speak or type to chat with AI - Get responses in both text and audio!</p>
+                    <h1>Audio Chatbot</h1>
+        <p>Speak or type to chat - Get responses in both text and audio!</p>
         </div>
 
         <div class="input-section">
@@ -293,15 +293,15 @@
             <div class="input-group">
                 <label>Audio Input:</label>
                 <div class="audio-controls">
-                    <button id="startRecording" class="btn btn-primary">
-                        🎤 Start Recording
-                    </button>
-                    <button id="stopRecording" class="btn btn-danger" style="display: none;">
-                        ⏹️ Stop Recording
-                    </button>
-                    <button id="sendText" class="btn btn-primary">
-                        📤 Send Text
-                    </button>
+                                         <button id="startRecording" class="btn btn-primary">
+                         Start Recording
+                     </button>
+                                         <button id="stopRecording" class="btn btn-danger" style="display: none;">
+                         Stop Recording
+                     </button>
+                                         <button id="sendText" class="btn btn-primary">
+                         Send Text
+                     </button>
                     <div id="recordingIndicator" class="recording-indicator">
                         <div class="recording-dot"></div>
                         Recording...
@@ -318,9 +318,9 @@
 
         <div class="conversation" id="conversation">
             <div class="message bot">
-                <div class="message-header">🤖 AI Assistant</div>
-                <div class="message-content">
-                    Hello! I'm your AI assistant. You can speak to me by clicking the microphone button, or type your message and click "Send Text". I'll respond with both text and audio!
+                            <div class="message-header">Assistant</div>
+            <div class="message-content">
+                Hello! I'm your assistant. You can speak to me by clicking the microphone button, or type your message and click "Send Text". I'll respond with both text and audio!
                 </div>
             </div>
         </div>
@@ -549,7 +549,7 @@
                 
                 const header = document.createElement('div');
                 header.className = 'message-header';
-                header.textContent = sender === 'user' ? '👤 You' : '🤖 AI Assistant';
+                header.textContent = sender === 'user' ? 'You' : 'Assistant';
                 
                 const contentDiv = document.createElement('div');
                 contentDiv.className = 'message-content';
